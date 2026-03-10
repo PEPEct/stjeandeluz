@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <title>St. Jean de Luz · Compte enrere</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: #fff;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background:
+        linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.52)),
+        url("./stjeandeluz-bg.jpg") center/cover no-repeat;
+    }
+
+    .wrap {
+      width: min(100%, 440px);
+      padding: 18px;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, .30);
+      border: 1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 22px;
+      padding: 20px 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.28);
+    }
+
+    .kicker {
+      font-size: 13px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      opacity: .92;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 9vw, 44px);
+      line-height: 1.02;
+    }
+
+    .subtitle {
+      margin: 10px 0 22px;
+      opacity: .95;
+      font-size: 15px;
+    }
+
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .box {
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 16px;
+      padding: 16px 10px;
+    }
+
+    .num {
+      display: block;
+      font-size: clamp(28px, 10vw, 42px);
+      font-weight: 800;
+      letter-spacing: -.04em;
+      line-height: 1;
+    }
+
+    .label {
+      display: block;
+      margin-top: 6px;
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      opacity: .9;
+    }
+
+    .date {
+      margin-top: 18px;
+      font-size: 15px;
+      opacity: .96;
+    }
+
+    .done {
+      display: none;
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(34,197,94,.22);
+      border: 1px solid rgba(255,255,255,.18);
+      font-size: 16px;
+    }
+
+    .small {
+      margin-top: 12px;
+      font-size: 12px;
+      opacity: .78;
+    }
+
+    @media (min-width: 700px) {
+      .countdown { grid-template-columns: repeat(4, 1fr); }
+      .wrap { width: min(100%, 860px); }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <div class="kicker"></div>
+      <h1>St. Jean de Luz</h1>
+      <div class="subtitle"></div>
+
+      <div class="countdown" aria-label="Compte enrere">
+        <div class="box"><span class="num" id="days">00</span><span class="label">Dies</span></div>
+        <div class="box"><span class="num" id="hours">00</span><span class="label">Hores</span></div>
+        <div class="box"><span class="num" id="minutes">00</span><span class="label">Minuts</span></div>
+        <div class="box"><span class="num" id="seconds">00</span><span class="label">Segons</span></div>
+      </div>
+
+      <div class="date">Sortida: 19/03/2026 · 07:00</div>
+      <div class="done" id="done">🎉 Ja és hora d'anar cap a St. Jean de Luz!</div>
+      <div class="small"></div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const els = {
+        days: document.getElementById("days"),
+        hours: document.getElementById("hours"),
+        minutes: document.getElementById("minutes"),
+        seconds: document.getElementById("seconds"),
+        done: document.getElementById("done")
+      };
+
+      // 19 marzo 2026 a las 07:00, usando la hora local del navegador
+      const target = new Date(2026, 2, 19, 7, 0, 0, 0).getTime();
+
+      function pad(n) {
+        return String(n).padStart(2, "0");
+      }
+
+      function update() {
+        const now = Date.now();
+        let diff = target - now;
+
+        if (diff <= 0) {
+          diff = 0;
+          els.done.style.display = "block";
+        } else {
+          els.done.style.display = "none";
+        }
+
+        const dayMs = 1000 * 60 * 60 * 24;
+        const hourMs = 1000 * 60 * 60;
+        const minuteMs = 1000 * 60;
+
+        const days = Math.floor(diff / dayMs);
+        const hours = Math.floor((diff % dayMs) / hourMs);
+        const minutes = Math.floor((diff % hourMs) / minuteMs);
+        const seconds = Math.floor((diff % minuteMs) / 1000);
+
+        els.days.textContent = pad(days);
+        els.hours.textContent = pad(hours);
+        els.minutes.textContent = pad(minutes);
+        els.seconds.textContent = pad(seconds);
+      }
+
+      update();
+      setInterval(update, 1000);
+    })();
+  </script>
+</body>
+</html>
